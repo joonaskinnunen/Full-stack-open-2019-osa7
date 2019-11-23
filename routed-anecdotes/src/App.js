@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {
   BrowserRouter as Router,
-  Route, Link
+  Route, Link, Redirect
 } from 'react-router-dom'
 
 const Menu = (props) => {
@@ -18,8 +18,8 @@ const Menu = (props) => {
             <Link style={padding} to='/create'>create new</Link>
             <Link style={padding} to='/about'>about</Link>
           </div>
-          <Route exact path='/' render={() => <AnecdoteList anecdotes={props.anecdotes} />} />
-          <Route exact path='/create' render={() => <CreateNew addNew={props.addNew} />} />
+          <Route exact path='/' render={() => <AnecdoteList anecdotes={props.anecdotes} setToHome={props.setToHome} />} />
+          <Route exact path='/create' render={() => props.toHome ? <Redirect to="/" /> : <CreateNew addNew={props.addNew} />} />
           <Route exact path='/about' render={() => <About />} />
           <Route exact path='/anecdotes/:id' render={({ match }) => <AnecdoteInfo anecdote={props.anecdoteById(match.params.id)} />} />
         </div>
@@ -28,6 +28,27 @@ const Menu = (props) => {
   )
 }
 
+const Notification = ({ notification }) => {
+  const style = {
+    border: "2px solid green",
+    color: "green",
+    backgroundColor: "#d3d3d3",
+    padding: "10px",
+    borderRadius: "5px",
+    display: "inline-block",
+    fontWeight: "bold"
+  }
+
+  if (notification === null) {
+    style.display = 'none'
+  }
+
+  return (
+    <div style={style}>
+      <p>{notification}</p>
+    </div>
+  )
+}
 const AnecdoteInfo = ({ anecdote }) => (
   <div>
     <h2>{anecdote.content} by {anecdote.author}</h2>
@@ -36,7 +57,8 @@ const AnecdoteInfo = ({ anecdote }) => (
   </div>
 )
 
-const AnecdoteList = ({ anecdotes }) => {
+const AnecdoteList = ({ anecdotes, setToHome }) => {
+  setToHome(false)
   return (
     <div>
       <h2>Anecdotes</h2>
@@ -126,31 +148,27 @@ const App = () => {
     }
   ])
 
-  const [notification, setNotification] = useState('')
+  const [notification, setNotification] = useState(null)
+  const [toHome, setToHome] = useState(false)
 
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`a new anecdote ${anecdote.content} created!`)
+    setTimeout(() => {
+      setNotification(null)
+    }, 10000)
+    setToHome(true)
   }
 
   const anecdoteById = (id) =>
     anecdotes.find(a => a.id === id)
 
-  const vote = (id) => {
-    const anecdote = anecdoteById(id)
-
-    const voted = {
-      ...anecdote,
-      votes: anecdote.votes + 1
-    }
-
-    setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
-  }
-
   return (
     <div>
       <h1>Software anecdotes</h1>
-      <Menu anecdotes={anecdotes} addNew={addNew} anecdoteById={anecdoteById} />
+      <Notification notification={notification} />
+      <Menu anecdotes={anecdotes} addNew={addNew} anecdoteById={anecdoteById} toHome={toHome} setToHome={setToHome} />
       <Footer />
     </div>
   )
