@@ -1096,7 +1096,7 @@ class ConcatenatedModule extends Module {
 
 		// add harmony compatibility flag (must be first because of possible circular dependencies)
 		const usedExports = this.rootModule.usedExports;
-		if (usedExports === true || usedExports === null) {
+		if (usedExports === true) {
 			result.add(
 				runtimeTemplate.defineEsModuleFlagStatement({
 					exportsArgument: this.exportsArgument
@@ -1364,20 +1364,12 @@ class HarmonyExportExpressionDependencyConcatenatedTemplate {
 		}
 
 		if (dep.range) {
-			source.replace(
-				dep.rangeStatement[0],
-				dep.range[0] - 1,
-				content + "(" + dep.prefix
-			);
+			source.replace(dep.rangeStatement[0], dep.range[0] - 1, content + "(");
 			source.replace(dep.range[1], dep.rangeStatement[1] - 1, ");");
 			return;
 		}
 
-		source.replace(
-			dep.rangeStatement[0],
-			dep.rangeStatement[1] - 1,
-			content + dep.prefix
-		);
+		source.replace(dep.rangeStatement[0], dep.rangeStatement[1] - 1, content);
 	}
 }
 
