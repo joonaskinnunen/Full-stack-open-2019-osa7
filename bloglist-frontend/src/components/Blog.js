@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 const Blog = ({ blog, like, remove, creator }) => {
+  console.log(blog)
   const [expanded, setExpanded] = useState(false)
 
   const blogStyle = {
@@ -19,7 +20,7 @@ const Blog = ({ blog, like, remove, creator }) => {
         <button onClick={() => like(blog)}>like</button>
       </div>
       <div>added by {blog.user.name}</div>
-      {creator &&(<button onClick={() => remove(blog)}>remove </button>)}
+      {creator && (<button onClick={() => remove(blog)}>remove </button>)}
     </div>
   )
 
@@ -30,7 +31,8 @@ const Blog = ({ blog, like, remove, creator }) => {
       </div>
       {expanded && details()}
     </div>
-  )}
+  )
+}
 
 
 Blog.propTypes = {
