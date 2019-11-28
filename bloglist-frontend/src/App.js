@@ -9,7 +9,12 @@ import { useField } from './hooks'
 import { newNotification } from './reducers/notificationReducer'
 import { addBlog, initializeBlogs, likeBlog, deleteBlog } from './reducers/blogReducer'
 import { logIn, logOut } from './reducers/userReducer'
+import { initializeUsers } from './reducers/usersReducer'
 import { connect } from 'react-redux'
+import {
+  BrowserRouter as Router,
+  Route
+} from 'react-router-dom'
 
 const App = (props) => {
   const [username] = useField('text')
@@ -19,6 +24,11 @@ const App = (props) => {
     const initializeBlogs = props.initializeBlogs
     initializeBlogs()
   }, [props.initializeBlogs])
+
+  useEffect(() => {
+    const initializeUsers = props.initializeUsers
+    initializeUsers()
+  }, [props.initializeUsers])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -74,6 +84,45 @@ const App = (props) => {
     }
   }
 
+  const BlogsListing = (props) => {
+    return (
+      <div>
+        {props.blogs.sort(byLikes).map(blog =>
+          <Blog
+            key={blog.id}
+            blog={blog}
+            like={likeBlog}
+            remove={removeBlog}
+            user={props.user}
+            creator={blog.user.username === props.user.username}
+          />
+
+        )}
+      </div>
+    )
+  }
+
+  const UsersInfo = (props) => {
+    const users = props.users
+    console.log(users)
+    return (
+      <div>
+        <h2>Users</h2>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>blogs created</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map(user => <tr key={user.id}><td>{user.name}</td><td>{user.blogs.length}</td></tr>)}
+          </tbody>
+        </table>
+      </div>
+    )
+  }
+
   if (props.user === null) {
     return (
       <div>
@@ -102,27 +151,19 @@ const App = (props) => {
   console.log(props.blogs)
   return (
     <div>
-      <h2>blogs</h2>
-
-      <Notification />
-
-      <p>{props.user.name} logged in</p>
-      <button onClick={handleLogout}>logout</button>
-
-      <Togglable buttonLabel='create new' ref={newBlogRef}>
-        <NewBlog createBlog={createBlog} />
-      </Togglable>
-
-      {props.blogs.sort(byLikes).map(blog =>
-        <Blog
-          key={blog.id}
-          blog={blog}
-          like={likeBlog}
-          remove={removeBlog}
-          user={props.user}
-          creator={blog.user.username === props.user.username}
-        />
-      )}
+      <Router>
+        <h2>blogs</h2>
+        <Notification />
+        <p>{props.user.name} logged in</p>
+        <button onClick={handleLogout}>logout</button>
+        <Route exact path='/' render={() =>
+          <div>
+            <Togglable buttonLabel='create new' ref={newBlogRef}>
+              <NewBlog createBlog={createBlog} />
+            </Togglable>
+            <BlogsListing blogs={props.blogs} user={props.user} /></div>} />
+        <Route exact path='/users' render={() => <UsersInfo users={props.users} />} />
+      </Router>
     </div>
   )
 }
@@ -130,7 +171,8 @@ const App = (props) => {
 const mapStateToProps = (state) => {
   return {
     blogs: state.blogs,
-    user: state.user
+    user: state.user,
+    users: state.users
   }
 }
 
@@ -141,7 +183,8 @@ const mapDispatchToProps = {
   likeBlog,
   deleteBlog,
   logIn,
-  logOut
+  logOut,
+  initializeUsers
 }
 
 const connectedApp = connect(
