@@ -13,7 +13,7 @@ import { initializeUsers } from './reducers/usersReducer'
 import { connect } from 'react-redux'
 import {
   BrowserRouter as Router,
-  Route
+  Route, Link
 } from 'react-router-dom'
 
 const App = (props) => {
@@ -116,9 +116,26 @@ const App = (props) => {
             </tr>
           </thead>
           <tbody>
-            {users.map(user => <tr key={user.id}><td>{user.name}</td><td>{user.blogs.length}</td></tr>)}
+            {users.map(user => <tr key={user.id}><td><Link to={'/users/' + user.id}>{user.name}</Link></td><td>{user.blogs.length}</td></tr>)}
           </tbody>
         </table>
+      </div>
+    )
+  }
+
+  const User = (props) => {
+    console.log(props.user)
+    if (props.user === undefined) {
+      return null
+    }
+    const user = props.user
+    return (
+      <div>
+        <h2>{props.user.name}</h2>
+        <h3>added blogs</h3>
+        <ul>
+          {user.blogs.map(blog => <li key={blog.id}>{blog.title}</li>)}
+        </ul>
       </div>
     )
   }
@@ -148,7 +165,10 @@ const App = (props) => {
   const newBlogRef = React.createRef()
 
   const byLikes = (b1, b2) => b2.likes - b1.likes
-  console.log(props.blogs)
+
+  const userById = (id) => {
+    return props.users.find(user => user.id === id)
+  }
   return (
     <div>
       <Router>
@@ -163,6 +183,9 @@ const App = (props) => {
             </Togglable>
             <BlogsListing blogs={props.blogs} user={props.user} /></div>} />
         <Route exact path='/users' render={() => <UsersInfo users={props.users} />} />
+        <Route exact path="/users/:id" render={({ match }) =>
+          <User user={userById(match.params.id)} />
+        } />
       </Router>
     </div>
   )
