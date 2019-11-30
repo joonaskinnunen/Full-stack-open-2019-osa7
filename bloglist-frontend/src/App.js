@@ -85,17 +85,16 @@ const App = (props) => {
   }
 
   const BlogsListing = (props) => {
+    const style = {
+      border: '1px black solid',
+      textDecorationLine: 'underline',
+      paddingTop: '5px',
+      paddingLeft: '5px'
+    }
     return (
       <div>
         {props.blogs.sort(byLikes).map(blog =>
-          <Blog
-            key={blog.id}
-            blog={blog}
-            like={likeBlog}
-            remove={removeBlog}
-            user={props.user}
-            creator={blog.user.username === props.user.username}
-          />
+          <Link to={'/blogs/' + blog.id} key={blog.id}><p style={style}>{blog.title + ' ' + blog.author}</p></Link>
 
         )}
       </div>
@@ -123,15 +122,14 @@ const App = (props) => {
     )
   }
 
-  const User = (props) => {
-    console.log(props.user)
-    if (props.user === undefined) {
+  const User = ({ user }) => {
+    console.log(user)
+    if (user === undefined) {
       return null
     }
-    const user = props.user
     return (
       <div>
-        <h2>{props.user.name}</h2>
+        <h2>{user.name}</h2>
         <h3>added blogs</h3>
         <ul>
           {user.blogs.map(blog => <li key={blog.id}>{blog.title}</li>)}
@@ -169,6 +167,10 @@ const App = (props) => {
   const userById = (id) => {
     return props.users.find(user => user.id === id)
   }
+
+  const blogById = (id) => {
+    return props.blogs.find(blog => blog.id === id)
+  }
   return (
     <div>
       <Router>
@@ -185,6 +187,12 @@ const App = (props) => {
         <Route exact path='/users' render={() => <UsersInfo users={props.users} />} />
         <Route exact path="/users/:id" render={({ match }) =>
           <User user={userById(match.params.id)} />
+        } />
+        <Route exact path="/blogs/:id" render={({ match }) =>
+          <Blog blog={blogById(match.params.id)}
+            like={likeBlog}
+            remove={removeBlog}
+            user={props.user} />
         } />
       </Router>
     </div>
