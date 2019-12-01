@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, like, remove, user }) => {
+const Blog = ({ blog, like, remove, user, comments }) => {
   console.log(blog)
   const blogStyle = {
     paddingTop: 10,
@@ -12,6 +12,18 @@ const Blog = ({ blog, like, remove, user }) => {
     return null
   }
   const creator = blog.user.username === user.username
+
+  const Comments = () => {
+    console.log(comments)
+    return (
+      <div>
+        <h3>comments</h3>
+        <ul>
+          {comments.map(comment => <li key={comment.id}>{comment.comment}</li>)}
+        </ul>
+      </div>
+    )
+  }
 
   return (
     <div style={blogStyle}>
@@ -25,6 +37,7 @@ const Blog = ({ blog, like, remove, user }) => {
         </div>
         <div>added by {blog.user.name}</div>
         {creator && (<button onClick={() => remove(blog)}>remove </button>)}
+        <Comments />
       </div>
     </div>
   )

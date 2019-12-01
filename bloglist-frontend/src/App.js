@@ -11,6 +11,7 @@ import { newNotification } from './reducers/notificationReducer'
 import { addBlog, initializeBlogs, likeBlog, deleteBlog } from './reducers/blogReducer'
 import { logIn, logOut } from './reducers/userReducer'
 import { initializeUsers } from './reducers/usersReducer'
+import { initializeComments } from './reducers/commentsReducer'
 import { connect } from 'react-redux'
 import {
   BrowserRouter as Router,
@@ -30,6 +31,11 @@ const App = (props) => {
     const initializeUsers = props.initializeUsers
     initializeUsers()
   }, [props.initializeUsers])
+
+  useEffect(() => {
+    const initializeComments = props.initializeComments
+    initializeComments()
+  }, [props.initializeComments])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -172,6 +178,12 @@ const App = (props) => {
   const blogById = (id) => {
     return props.blogs.find(blog => blog.id === id)
   }
+
+  const commentsByBlogId = (id) => {
+    console.log(props.comments)
+    return props.comments.filter(comment => comment.blogId === id)
+  }
+
   return (
     <div>
       <Router>
@@ -193,7 +205,8 @@ const App = (props) => {
           <Blog blog={blogById(match.params.id)}
             like={likeBlog}
             remove={removeBlog}
-            user={props.user} />
+            user={props.user} 
+            comments={commentsByBlogId(match.params.id)}/>
         } />
       </Router>
     </div>
@@ -204,7 +217,8 @@ const mapStateToProps = (state) => {
   return {
     blogs: state.blogs,
     user: state.user,
-    users: state.users
+    users: state.users,
+    comments: state.comments
   }
 }
 
@@ -216,7 +230,8 @@ const mapDispatchToProps = {
   deleteBlog,
   logIn,
   logOut,
-  initializeUsers
+  initializeUsers,
+  initializeComments
 }
 
 const connectedApp = connect(
