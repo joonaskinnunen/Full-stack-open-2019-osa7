@@ -18,8 +18,6 @@ export const likeBlog = (blog) => {
             type: 'LIKE_BLOG',
             updatedBlog
         })
-        console.log(updatedBlog)
-
     }
 }
 

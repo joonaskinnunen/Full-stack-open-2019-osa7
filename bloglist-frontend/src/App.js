@@ -5,6 +5,7 @@ import loginService from './services/login'
 import NewBlog from './components/NewBlog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import Menu from './components/Menu'
 import { useField } from './hooks'
 import { newNotification } from './reducers/notificationReducer'
 import { addBlog, initializeBlogs, likeBlog, deleteBlog } from './reducers/blogReducer'
@@ -174,10 +175,10 @@ const App = (props) => {
   return (
     <div>
       <Router>
+        <Menu user={props.user} handleLogOut={handleLogout} />
         <h2>blogs</h2>
         <Notification />
         <p>{props.user.name} logged in</p>
-        <button onClick={handleLogout}>logout</button>
         <Route exact path='/' render={() =>
           <div>
             <Togglable buttonLabel='create new' ref={newBlogRef}>
