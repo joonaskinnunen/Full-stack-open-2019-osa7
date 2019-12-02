@@ -3,8 +3,6 @@ import PropTypes from 'prop-types'
 import { useField } from '../hooks'
 
 const Blog = ({ blog, like, remove, user, comments, createComment }) => {
-  const [comment, commentReset] = useField('text')
-  console.log(blog)
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -13,19 +11,22 @@ const Blog = ({ blog, like, remove, user, comments, createComment }) => {
   if (blog === undefined) {
     return null
   }
+
   const creator = blog.user.username === user.username
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    createComment({
-      comment: comment.value,
-      blogId: blog.id
-    })
-    commentReset()
-
-  }
   const Comments = () => {
-    console.log(comments)
+    const [comment, commentReset] = useField('text')
+
+    const handleSubmit = (event) => {
+      event.preventDefault()
+      createComment({
+        comment: comment.value,
+        blogId: blog.id
+      })
+      commentReset()
+
+    }
+
     return (
       <div>
         <h3>comments</h3>
