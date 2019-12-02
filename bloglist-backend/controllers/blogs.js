@@ -44,8 +44,10 @@ router.post('/', async (request, response) => {
 })
 
 router.post('/:id/comments', async (request, response) => {
-    const comment = new Comment(request.body)
-    comment.blogId = request.params.id
+    const comment = new Comment({
+        blogId: request.params.id,
+        comment: request.body.comment
+    })
     const result = await comment.save()
   
     response.status(201).json(result)

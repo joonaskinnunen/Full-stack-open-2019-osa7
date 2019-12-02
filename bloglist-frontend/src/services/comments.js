@@ -6,4 +6,12 @@ const getAll = () => {
     return request.then(response => response.data)
 }
 
-export default { getAll }
+const create = async newObject => {
+    const url = `${baseUrl}${newObject.blogId}/comments/`
+    console.log(url)
+    const response = await axios.post(url, newObject)
+    console.log(response.data)
+    return response.data
+  }
+
+export default { getAll, create }

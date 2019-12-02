@@ -11,7 +11,7 @@ import { newNotification } from './reducers/notificationReducer'
 import { addBlog, initializeBlogs, likeBlog, deleteBlog } from './reducers/blogReducer'
 import { logIn, logOut } from './reducers/userReducer'
 import { initializeUsers } from './reducers/usersReducer'
-import { initializeComments } from './reducers/commentsReducer'
+import { initializeComments, newComment } from './reducers/commentsReducer'
 import { connect } from 'react-redux'
 import {
   BrowserRouter as Router,
@@ -76,6 +76,11 @@ const App = (props) => {
   const createBlog = async (blog) => {
     props.addBlog(blog)
     notify(`a new blog ${blog.title} by ${blog.author} added`, 'success', 5000)
+  }
+
+  const createComment = async (commentObj) => {
+    props.newComment(commentObj)
+    notify(`a new comment ${commentObj.comment} added`, 'success', 5000)
   }
 
   const likeBlog = async (blog) => {
@@ -203,6 +208,7 @@ const App = (props) => {
         } />
         <Route exact path="/blogs/:id" render={({ match }) =>
           <Blog blog={blogById(match.params.id)}
+            createComment={createComment}
             like={likeBlog}
             remove={removeBlog}
             user={props.user} 
@@ -231,7 +237,8 @@ const mapDispatchToProps = {
   logIn,
   logOut,
   initializeUsers,
-  initializeComments
+  initializeComments,
+  newComment
 }
 
 const connectedApp = connect(
