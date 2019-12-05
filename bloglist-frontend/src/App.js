@@ -6,6 +6,7 @@ import NewBlog from './components/NewBlog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import Menu from './components/Menu'
+import { Container, List } from 'semantic-ui-react'
 import { useField } from './hooks'
 import { newNotification } from './reducers/notificationReducer'
 import { addBlog, initializeBlogs, likeBlog, deleteBlog } from './reducers/blogReducer'
@@ -104,12 +105,11 @@ const App = (props) => {
       paddingLeft: '5px'
     }
     return (
-      <div>
+      <List>
         {props.blogs.sort(byLikes).map(blog =>
-          <Link to={'/blogs/' + blog.id} key={blog.id}><p style={style}>{blog.title + ' ' + blog.author}</p></Link>
-
+          <List.Item key={blog.id}><List.Content><List.Description><Link to={'/blogs/' + blog.id}><p style={style}>{blog.title + ' ' + blog.author}</p></Link></List.Description></List.Content></List.Item>
         )}
-      </div>
+      </List>
     )
   }
 
@@ -190,7 +190,7 @@ const App = (props) => {
   }
 
   return (
-    <div>
+    <Container>
       <Router>
         <Menu user={props.user} handleLogOut={handleLogout} />
         <h2>blogs</h2>
@@ -211,11 +211,11 @@ const App = (props) => {
             createComment={createComment}
             like={likeBlog}
             remove={removeBlog}
-            user={props.user} 
-            comments={commentsByBlogId(match.params.id)}/>
+            user={props.user}
+            comments={commentsByBlogId(match.params.id)} />
         } />
       </Router>
-    </div>
+    </Container>
   )
 }
 
