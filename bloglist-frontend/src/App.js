@@ -159,14 +159,14 @@ const App = (props) => {
 
         <form onSubmit={handleLogin}>
           <div>
-            käyttäjätunnus
-            <input {...username} />
+            username
+            <input {...username} data-cy='username' />
           </div>
           <div>
-            salasana
-            <input {...password} />
+            password
+            <input {...password} data-cy='password'/>
           </div>
-          <button type="submit">kirjaudu</button>
+          <button type="submit" data-cy='login'>log in</button>
         </form>
       </div>
     )
