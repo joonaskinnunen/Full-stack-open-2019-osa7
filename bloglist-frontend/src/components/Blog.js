@@ -54,7 +54,7 @@ const Blog = ({ blog, like, remove, user, comments, createComment }) => {
       <div className='details'>
         <a href={blog.url}>{blog.url}</a>
         <div>{blog.likes} likes
-        <Button style={style} onClick={() => like(blog)}>like</Button>
+          <Button style={style} onClick={() => like(blog)}>like</Button>
         </div>
         <div>added by {blog.user.name}</div>
         {creator && (<button onClick={() => remove(blog)}>remove </button>)}
