@@ -11,11 +11,11 @@ const Menu = ({ user, handleLogOut }) => {
         <Link to='/'>blogs</Link>
       </MenuUi.Item>
       <MenuUi.Item>
-        <Link to='/users'>users</Link>
+        <Link to='/users' data-cy='users'>users</Link>
       </MenuUi.Item>
       <MenuUi.Item>
         {user.name + ' logged in'}
-        <button onClick={handleLogOut}>logout</button>
+        <button onClick={handleLogOut} data-cy='logout'>logout</button>
       </MenuUi.Item>
     </MenuUi>
   )

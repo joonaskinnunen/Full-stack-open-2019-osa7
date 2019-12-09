@@ -32,8 +32,8 @@ const Blog = ({ blog, like, remove, user, comments, createComment }) => {
       <div>
         <h3>comments</h3>
         <Form onSubmit={handleSubmit}>
-          <input {...comment} />
-          <Button type='submit'>add comment</Button>
+          <input {...comment} data-cy='comment'/>
+          <Button type='submit' data-cy='submitComment'>add comment</Button>
         </Form>
         <ul>
           {comments.map(comment => <li key={comment.id}>{comment.comment}</li>)}
@@ -54,7 +54,7 @@ const Blog = ({ blog, like, remove, user, comments, createComment }) => {
       <div className='details'>
         <a href={blog.url}>{blog.url}</a>
         <div>{blog.likes} likes
-          <Button style={style} onClick={() => like(blog)}>like</Button>
+          <Button style={style} onClick={() => like(blog)} data-cy='like'>like</Button>
         </div>
         <div>added by {blog.user.name}</div>
         {creator && (<button onClick={() => remove(blog)}>remove </button>)}
