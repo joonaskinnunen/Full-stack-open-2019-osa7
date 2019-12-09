@@ -24,19 +24,19 @@ const NewBlog = (props) => {
       <h2>create new</h2>
 
       <Form onSubmit={handleSubmit}>
-        <Form.Field>
+        <Form.Field data-cy='title'>
           title:
           <input {...title} />
         </Form.Field>
-        <Form.Field>
+        <Form.Field data-cy='author'>
           author:
           <input {...author} />
         </Form.Field>
-        <Form.Field>
+        <Form.Field data-cy='url'>
           url:
           <input {...url} />
         </Form.Field>
-        <Button type='submit'>create</Button>
+        <Button type='submit' data-cy='newBlog'>create</Button>
       </Form>
     </div>
   )
